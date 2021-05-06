@@ -1,0 +1,14 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'application'
+
+
+mainClassName = 'Aplicacao.Main'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.20'
+}
