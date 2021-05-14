@@ -28,6 +28,7 @@ public class CursoAlunoDAO {
                 retorno = st.executeUpdate();
                 if (retorno > 0) {
                     JOptionPane.showMessageDialog(null, "Salvo com Sucesso!");
+                    conn.commit();
                 }
             } else {
                 st = conn.prepareStatement("SELECT codigo FROM curso_aluno "
@@ -35,7 +36,7 @@ public class CursoAlunoDAO {
                         + "codigo_curso =" + cursoAluno.getCodCurso());
                 rs = st.executeQuery();
                 if (rs.next()) {
-                    JOptionPane.showMessageDialog(null, "Curso já cadastrado "
+                    JOptionPane.showMessageDialog(null, "Curso ja� cadastrado "
                             + "para o aluno " + cursoAluno.getCodAluno());
                 } else {
                     st = conn.prepareStatement("INSERT INTO curso_aluno "
@@ -44,11 +45,19 @@ public class CursoAlunoDAO {
                     retorno = st.executeUpdate();
                     if (retorno > 0) {
                         JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
+                        conn.commit();
                     }
                 }
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
+            try{
+                if(conn != null){
+                    conn.rollback();
+                }
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Erro: \n" + e);
+            }
         } finally {
             connection.closeResultset(rs);
             connection.closeStatement(st);
@@ -117,48 +126,22 @@ public class CursoAlunoDAO {
             st = conn.prepareStatement("DELETE FROM curso_aluno WHERE codigo =" + codigo);
             retorno = st.executeUpdate();
             if (retorno > 0) {
-                JOptionPane.showMessageDialog(null, "Excluído com sucesso!");
+                JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
+                conn.commit();
             } else {
                 JOptionPane.showMessageDialog(null, "Erro ao salvar!");
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
+            try{
+                if(conn != null){
+                    conn.rollback();
+                }
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Erro: \n" + e);
+            }
         } finally {
             connection.closeStatement(st);
         }
-    }
-
-    public int criaTabela() {
-        int retorno = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
-        String database = connection.getDatabaseName();
-        StringBuilder sql = new StringBuilder();
-        //cria tabela curso_aluno
-        sql.append(" CREATE TABLE IF NOT EXISTS " + database + ".curso_aluno(");
-        sql.append(" codigo INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,");
-        sql.append("codigo_aluno INTEGER NOT NULL,");
-        sql.append("codigo_curso INTEGER NOT NULL);");
-
-        try {
-            conn = connection.getConnection();
-            st = conn.prepareStatement(sql.toString());
-            st.executeUpdate();
-            //adiciona chaves estrangeiras
-            sql = new StringBuilder();
-            sql.append(" ALTER TABLE " + database + ".curso_aluno ");
-            sql.append("ADD FOREIGN KEY(codigo_curso) REFERENCES " + database + ".curso(codigo);");
-            st = conn.prepareStatement(sql.toString());
-            retorno = st.executeUpdate();
-            sql = new StringBuilder();
-            sql.append(" ALTER TABLE " + database + ".curso_aluno ");
-            sql.append("ADD FOREIGN KEY(codigo_aluno) REFERENCES " + database + ".aluno(codigo);");
-            st = conn.prepareStatement(sql.toString());
-            retorno = st.executeUpdate();
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
-        return retorno;
     }
 }

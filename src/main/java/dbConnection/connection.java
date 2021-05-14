@@ -26,6 +26,7 @@ public class connection {
             try {
                 url = "jdbc:postgresql://" + props.getProperty("database.ip") + ":" + props.getProperty("database.porta") + "/" + getDatabaseName();
                 conn = DriverManager.getConnection(url, props);
+                conn.setAutoCommit(false);
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "A tentativa de Conexao Falhou!");
                 conn = null;
@@ -118,6 +119,7 @@ public class connection {
             url += props.getProperty("database.nome");
             conn.close();                                           //fecha conexão antiga
             conn = DriverManager.getConnection(url, props);        //tenta conectar com a nova url
+            conn.setAutoCommit(false);
             TabelasDAO tabelas = new TabelasDAO();
             tabelas.criaTabelaAluno();
             tabelas.criaTabelaCurso();

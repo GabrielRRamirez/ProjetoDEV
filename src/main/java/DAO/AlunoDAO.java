@@ -31,9 +31,17 @@ public class AlunoDAO {
             linhasAfetadas = st.executeUpdate();
             if (linhasAfetadas > 0) {
                 JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
+                conn.commit();
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
+            try{
+                if(conn != null){
+                    conn.rollback();
+                }
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Erro: \n" + e);
+            }
         } finally {
             connection.closeStatement(st);
         }
@@ -52,20 +60,28 @@ public class AlunoDAO {
                         + "codigo_aluno =" + codigo);
                 rs = st.executeQuery();
                 if (rs.next()) {
-                    JOptionPane.showMessageDialog(null, "O Aluno está vinculado "
+                    JOptionPane.showMessageDialog(null, "O Aluno esta vinculado "
                             + "à uma classe e não pode ser excluido!");
                 } else {
                     st = conn.prepareStatement("DELETE FROM aluno WHERE codigo = " + codigo);
                     linhasAfetadas = st.executeUpdate();
                     if (linhasAfetadas > 0) {
                         JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
+                        conn.commit();
                     }
                 }
             }
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, ex);try{
+                if(conn != null){
+                    conn.rollback();
+                }
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Erro: \n" + e);
+            }
         } finally {
-            connection.closeConnection();
+            connection.closeResultset(rs);
+            connection.closeStatement(st);
         }
     }
 
@@ -100,31 +116,11 @@ public class AlunoDAO {
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
+            
         } finally {
             connection.closeResultset(rs);
             connection.closeStatement(st);
         }
         return alunos;
-    }
-
-    public int criaTabela() {
-        int retorno = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
-        String database = connection.getDatabaseName();
-        StringBuilder sql = new StringBuilder();
-        //cria tabela aluno
-        sql.append("CREATE TABLE IF NOT EXISTS " + database + ".aluno(");
-        sql.append("codigo INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,");
-        sql.append("nome VARCHAR(50) NOT NULL );");
-
-        try {
-            conn = connection.getConnection();
-            st = conn.prepareStatement(sql.toString());
-            retorno = st.executeUpdate();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
-        return retorno;
     }
 }

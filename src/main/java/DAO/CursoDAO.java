@@ -35,9 +35,17 @@ public class CursoDAO {
             linhasAfetadas = st.executeUpdate();
             if(linhasAfetadas > 0){
                 JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
+                conn.commit();
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
+            try{
+                if(conn != null){
+                    conn.rollback();
+                }
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Erro: \n" + e);
+            }
         } finally {
             connection.closeStatement(st);
         }
@@ -57,19 +65,27 @@ public class CursoDAO {
                 rs = st.executeQuery();
                 
                 if(rs.next()){
-                    JOptionPane.showMessageDialog(null, "O Curso estÃ¡ vinculado "
-                            + "Ã  uma classe e nÃ£o pode ser excluido!");
+                    JOptionPane.showMessageDialog(null, "O Curso esta¡ vinculado "
+                            + "a  uma classe e nao pode ser excluido!");
                 }else{
                     st = conn.prepareStatement("DELETE FROM curso WHERE codigo = " + codigo);
                 linhasAfetadas = st.executeUpdate();
                 if(linhasAfetadas > 0){
                     JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
+                    conn.commit();
                 }
                 }
                 
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
+            try{
+                if(conn != null){
+                    conn.rollback();
+                }
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Erro: \n" + e);
+            }
         } finally {
             connection.closeConnection();
         }
@@ -112,27 +128,5 @@ public class CursoDAO {
             connection.closeStatement(st);
         }
         return cursos;
-    }
-
-    public int criaTabela() {
-        int retorno = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
-        String database = connection.getDatabaseName();
-        StringBuilder sql = new StringBuilder();
-        //cria tabela curso
-        sql.append(" CREATE TABLE IF NOT EXISTS " + database + ".curso(");
-        sql.append(" codigo INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,");
-        sql.append("descricao VARCHAR(50) NOT NULL,");
-        sql.append("ementa TEXT);");
-
-        try {
-            conn = connection.getConnection();
-            st = conn.prepareStatement(sql.toString());
-            retorno = st.executeUpdate();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
-        return retorno;
     }
 }

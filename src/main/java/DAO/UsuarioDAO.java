@@ -42,15 +42,23 @@ public class UsuarioDAO {
                 
             if(linhasAfetadas > 0){
                JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
+               conn.commit();
             }
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
+            try{
+                if(conn != null){
+                    conn.rollback();
+                }
+            }catch(SQLException ex){
+                JOptionPane.showMessageDialog(null, "Erro: \n" + ex);
+            }
 
         } finally {
             connection.closeStatement(st);
             connection.closeResultset(rs);
-            connection.closeConnection();
+            
         }
     }
 
@@ -65,13 +73,20 @@ public class UsuarioDAO {
             st.setInt(1, id);
             linhasAfetadas = st.executeUpdate();
             if(linhasAfetadas > 0){
-                JOptionPane.showMessageDialog(null, "Excluído com sucesso!");
+                JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
+                conn.commit();
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
+            try{
+                if(conn != null){
+                    conn.rollback();
+                }
+            }catch(SQLException ex){
+                JOptionPane.showMessageDialog(null, "Erro: \n" + e);
+            }
         } finally {
             connection.closeStatement(st);
-            connection.closeConnection();
         }
     }
 
@@ -138,46 +153,6 @@ public class UsuarioDAO {
         } finally {
             connection.closeResultset(rs);
             connection.closeStatement(st);
-        }
-        return retorno;
-    }
-
-    public int criaTabela() {
-        int retorno = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        String database = connection.getDatabaseName();
-        StringBuilder sql = new StringBuilder();
-        //cria tabela curso
-        sql.append(" CREATE TABLE IF NOT EXISTS " + database + ".usuario(");
-        sql.append(" id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT, ");
-        sql.append("nome VARCHAR(50) NOT NULL, ");
-        sql.append("login VARCHAR(50) NOT NULL,");
-        sql.append("senha VARCHAR(50) NOT NULL);");
-
-        try {
-            conn = connection.getConnection();
-            st = conn.prepareStatement(sql.toString());
-            retorno = st.executeUpdate();
-            st = conn.prepareStatement("SELECT id FROM " + database + ".usuario "
-                    + "WHERE id = 0 ");
-            rs = st.executeQuery();
-
-            if (!rs.next()) {
-                sql = new StringBuilder();
-                sql.append("INSERT INTO " + database + ".usuario(nome,login,senha)");
-                sql.append("VALUES(");
-                sql.append("'administrador','admin','admin');");
-                st = conn.prepareStatement(sql.toString());
-                retorno = st.executeUpdate();
-                
-                st =conn.prepareStatement("UPDATE usuario set id = 0 where id = 1");
-                retorno = st.executeUpdate();
-            }
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
         }
         return retorno;
     }
