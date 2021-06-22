@@ -9,71 +9,62 @@ package Model;
  *
  * @author gabri
  */
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
-public class TableModel extends AbstractTableModel implements Serializable{
+public class TableModel extends AbstractTableModel{
 
-    private List<String> columns = new ArrayList();
-    private List<Object[]> rows = new ArrayList();
     private List<Integer> colunasEditaveis = new ArrayList();
+    private List<String> colunas = new ArrayList();
+    private List<Object[]> linhas = new ArrayList();
+    
 
     public TableModel() {
-        columns = new ArrayList();
-        rows = new ArrayList();
-
+        colunas = new ArrayList();
+        linhas = new ArrayList();
         colunasEditaveis = new ArrayList();
     }
     
-    public TableModel clone() {
-       TableModel clone = new TableModel();
-       clone.columns = new ArrayList(this.columns);
-       clone.colunasEditaveis = new ArrayList(this.colunasEditaveis);
-       clone.rows = new ArrayList(this.rows);
-
-       return clone;
-   }
 
     @Override
     public int getRowCount() {
-        return rows.size();
+        return linhas.size();
     }
 
     @Override
     public int getColumnCount() {
-        return columns.size();
+        return colunas.size();
     }
 
-    public void addColumn(String i_column) {
-        columns.add(i_column);
+    public void addColumn(String coluna) {
+        colunas.add(coluna);
     }
 
-    public void addRow(Object[] i_row) {
-        rows.add(i_row);
+    public void addRow(Object[] linha) {
+        linhas.add(linha);
         int ultimoIndice = getRowCount() - 1;
 
         fireTableRowsInserted(ultimoIndice, ultimoIndice);
     }
 
-    public void setColunasEditaveis(List<Integer> i_colunasEditaveis) {
-        this.colunasEditaveis = i_colunasEditaveis;
+    public void setColunasEditaveis(List<Integer> colunasEditaveis) {
+        this.colunasEditaveis = colunasEditaveis;
     }
 
     @Override
-    public boolean isCellEditable(int row, int col) {
-        return colunasEditaveis.contains(col);
+    public boolean isCellEditable(int linha, int coluna) {
+        return colunasEditaveis.contains(coluna);
     }
 
     @Override
-    public Class getColumnClass(int c) {
+    public Class getColumnClass(int coluna) {
         try {
-            if (getValueAt(0, c) == null) {
+            if (getValueAt(0, coluna) == null) {
                 return Object.class;
             }
 
-            return getValueAt(0, c).getClass();
+            return getValueAt(0, coluna).getClass();
 
         } catch (Exception ex) {
             return Object.class;
@@ -81,34 +72,27 @@ public class TableModel extends AbstractTableModel implements Serializable{
     }
 
     @Override
-    public String getColumnName(int columnIndex) {
-        return columns.get(columnIndex);
+    public String getColumnName(int coluna) {
+        return colunas.get(coluna);
     }
 
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        return rows.get(rowIndex)[columnIndex];
+    public Object getValueAt(int linha, int coluna) {
+        return linhas.get(linha)[coluna];
     }
 
     @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        rows.get(rowIndex)[columnIndex] = aValue;
-        fireTableRowsUpdated(rowIndex, rowIndex);
+    public void setValueAt(Object valor, int linha, int coluna) {
+        linhas.get(linha)[coluna] = valor;
+        fireTableRowsUpdated(linha, linha);
     }
 
-    public void removeRows(List<Integer> vLinhas) {
-        for (int linha : vLinhas) {
-            this.rows.remove(linha);
-            this.fireTableRowsDeleted(linha, linha);
-        }
-    }
-
-    public void removeRow(int i_linha) {
-        this.rows.remove(i_linha);
-        this.fireTableRowsDeleted(i_linha, i_linha);
+    public void removeRow(int linha) {
+        this.linhas.remove(linha);
+        this.fireTableRowsDeleted(linha, linha);
     }
 
     public List<Object[]> getRows() {
-        return rows;
+        return linhas;
     }
 }

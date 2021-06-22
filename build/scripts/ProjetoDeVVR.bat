@@ -67,7 +67,7 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\ProjetoDeVVR.jar;%APP_HOME%\lib\postgresql-42.2.20.jar;%APP_HOME%\lib\checker-qual-3.5.0.jar
+set CLASSPATH=%APP_HOME%\lib\ProjetoDevNovo.jar;%APP_HOME%\lib\postgresql-42.2.20.jar;%APP_HOME%\lib\checker-qual-3.5.0.jar
 
 
 @rem Execute ProjetoDeVVR

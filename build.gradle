@@ -3,7 +3,33 @@ apply plugin: 'jacoco'
 apply plugin: 'application'
 
 
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
 mainClassName = 'Aplicacao.Main'
+
+tasks.withType(JavaCompile) {
+ options.encoding = 'UTF-8'
+ options.fork = true
+}
+
+jar {
+    zip64=true
+    archiveBaseName = 'ProjetoDevNovo'
+    manifest {
+        attributes 'Main-Class': application.mainClass
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from { 
+        configurations.runtimeClasspath.collect { 
+            it.isDirectory() ? it : zipTree(it) 
+        } 
+    } {
+        exclude 'META-INF/.RSA', 'META-INF/.SF', 'META-INF/*.DSA'
+    }
+}
 
 repositories {
     mavenLocal()

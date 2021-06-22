@@ -9,10 +9,12 @@ import javax.swing.JOptionPane;
 
 public class TabelasDAO {
 
-    public int criaTabelaCurso() {
-        int retorno = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
+    Connection conn = null;
+    PreparedStatement st = null;
+    ResultSet rs = null;
+    
+    public void criaTabelaCurso() {
+        
         StringBuilder sql = new StringBuilder();
         //cria tabela curso
         sql.append(" CREATE TABLE IF NOT EXISTS public.curso(");
@@ -24,7 +26,6 @@ public class TabelasDAO {
             conn = connection.getConnection();
             st = conn.prepareStatement(sql.toString());
             st.executeUpdate();
-            retorno = 1;
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao criar tabela: /n" + ex);
             try{
@@ -35,15 +36,13 @@ public class TabelasDAO {
                 JOptionPane.showMessageDialog(null, "Erro: \n" + e);
             }
 
+        }finally{
+            connection.closeStatement(st);
+            conn = null;
         }
-        return retorno;
     }
 
-    public int criaTabelaUsuario() {
-        int retorno = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
+    public void criaTabelaUsuario() {
         StringBuilder sql = new StringBuilder();
         //cria tabela curso
         sql.append(" CREATE TABLE IF NOT EXISTS public.usuario(");
@@ -59,11 +58,7 @@ public class TabelasDAO {
 
             st = conn.prepareStatement("SELECT id FROM public.usuario WHERE ID = 0");
             rs = st.executeQuery();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null,"Erro ao criar tabela: /n" + ex);
-        }
-        
-        try {
+            
             if (!rs.next()) {
                 sql = new StringBuilder();
                 sql.append("INSERT INTO public.usuario(id,nome,login,senha)");
@@ -71,18 +66,17 @@ public class TabelasDAO {
                 sql.append("0,'administrador','admin','admin');");
                 st = conn.prepareStatement(sql.toString());
                 st.executeUpdate();
-                retorno = 1;
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao criar tabela: /n" + ex);
+        }finally{
+            connection.closeResultset(rs);
+            connection.closeStatement(st);
+            conn = null;
         }
-        return retorno;
     }
 
-    public int criaTabelaAluno() {
-        int retorno = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
+    public void criaTabelaAluno() {
         StringBuilder sql = new StringBuilder();
         //cria tabela aluno
         sql.append("CREATE TABLE IF NOT EXISTS public.aluno(");
@@ -94,17 +88,15 @@ public class TabelasDAO {
             conn = connection.getConnection();
             st = conn.prepareStatement(sql.toString());
             st.executeUpdate();
-            retorno =  1;
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao criar tabela: /n" + ex);
+        }finally{
+            connection.closeStatement(st);
+            conn = null;
         }
-        return retorno;
     }
 
-    public int criaTabelaCursoAluno() {
-        int retorno = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
+    public void criaTabelaCursoAluno() {
         StringBuilder sql = new StringBuilder();
         //cria tabela curso_aluno
         sql.append(" CREATE TABLE IF NOT EXISTS public.curso_aluno(");
@@ -122,17 +114,18 @@ public class TabelasDAO {
             sql.append(" ALTER TABLE public.curso_aluno ");
             sql.append("ADD FOREIGN KEY(codigo_curso) REFERENCES public.curso(codigo);");
             st = conn.prepareStatement(sql.toString());
-            retorno = st.executeUpdate();
+            st.executeUpdate();
             sql = new StringBuilder();
             sql.append(" ALTER TABLE public.curso_aluno ");
             sql.append("ADD FOREIGN KEY(codigo_aluno) REFERENCES public.aluno(codigo);");
             st = conn.prepareStatement(sql.toString());
             st.executeUpdate();
-            retorno = 1;
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao criar tabela: /n" + ex);
+        }finally{
+            connection.closeStatement(st);
+            conn = null;
         }
-        return retorno;
     }
 }

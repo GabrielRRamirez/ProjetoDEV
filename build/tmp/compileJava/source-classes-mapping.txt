@@ -85,8 +85,6 @@ View/Login.java
  View.Login
  View.Login$1
  View.Login$2
-Util/FormatacaoTexto.java
- Util.FormatacaoTexto
 DAO/CursoAlunoDAO.java
  DAO.CursoAlunoDAO
 Util/FormatacaoNumero.java
@@ -100,15 +98,6 @@ View/ConsultaUsuario.java
  View.ConsultaUsuario$3
  View.ConsultaUsuario$4
  View.ConsultaUsuario$5
-View/ConsultaAluno.java
- View.ConsultaAluno
- View.ConsultaAluno$1
- View.ConsultaAluno$2
- View.ConsultaAluno$3
- View.ConsultaAluno$4
- View.ConsultaAluno$5
-Model/TableCellRender.java
- Model.TableCellRender
 View/Principal.java
  View.Principal
  View.Principal$1
@@ -116,7 +105,14 @@ View/Principal.java
  View.Principal$3
  View.Principal$4
  View.Principal$5
- View.Principal$6
-View/testeview.java
- View.testeview
- View.testeview$1
+Model/TableCellRender.java
+ Model.TableCellRender
+Util/FormatacaoTexto.java
+ Util.FormatacaoTexto
+View/ConsultaAluno.java
+ View.ConsultaAluno
+ View.ConsultaAluno$1
+ View.ConsultaAluno$2
+ View.ConsultaAluno$3
+ View.ConsultaAluno$4
+ View.ConsultaAluno$5

@@ -12,10 +12,12 @@ import javax.swing.JOptionPane;
 
 public class CursoAlunoDAO {
 
+    Connection conn = null;
+    PreparedStatement st = null;
+    ResultSet rs = null;
+    
     public void inserir(CursoAluno cursoAluno) {
-        Connection conn = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
+        
         int retorno = 0;
 
         try {
@@ -61,14 +63,12 @@ public class CursoAlunoDAO {
         } finally {
             connection.closeResultset(rs);
             connection.closeStatement(st);
+            conn = null;
         }
     }
 
     public List<CursoAluno> get(int codigo, String pesquisa, int consulta) {
         List<CursoAluno> lista = new ArrayList<>();
-        Connection conn = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
         StringBuilder sql = new StringBuilder();
 
         sql.append("SELECT ca.*,a.nome,c.descricao FROM curso_aluno ca ");
@@ -112,13 +112,12 @@ public class CursoAlunoDAO {
         } finally {
             connection.closeResultset(rs);
             connection.closeStatement(st);
+            conn = null;
         }
         return lista;
     }
 
     public void delete(int codigo) {
-        Connection conn = null;
-        PreparedStatement st = null;
         int retorno = 0;
 
         try {
@@ -129,7 +128,7 @@ public class CursoAlunoDAO {
                 JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
                 conn.commit();
             } else {
-                JOptionPane.showMessageDialog(null, "Erro ao salvar!");
+                JOptionPane.showMessageDialog(null, "Erro ao excluir!");
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
@@ -142,6 +141,7 @@ public class CursoAlunoDAO {
             }
         } finally {
             connection.closeStatement(st);
+            conn = null;
         }
     }
 }

@@ -12,10 +12,13 @@ import javax.swing.JOptionPane;
 
 public class CursoDAO {
 
+    Connection conn = null;
+    PreparedStatement st = null;
+    ResultSet rs = null;
+    
     public void inserir(Curso curso) {
         int linhasAfetadas = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
+        
         StringBuilder sql = null;
 
         try {
@@ -48,14 +51,12 @@ public class CursoDAO {
             }
         } finally {
             connection.closeStatement(st);
+            conn = null;
         }
     }
 
     public void delete(int codigo) {
         int linhasAfetadas = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
 
         try {
             if (codigo > 0) {
@@ -87,15 +88,14 @@ public class CursoDAO {
                 JOptionPane.showMessageDialog(null, "Erro: \n" + e);
             }
         } finally {
-            connection.closeConnection();
+            connection.closeStatement(st);
+            connection.closeResultset(rs);
+            conn = null;
         }
     }
 
     public List<Curso> getCursos(int codigo, String descricao) {
         List<Curso> cursos = new ArrayList<>();
-        Connection conn = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
         StringBuilder sql = null;
 
         try {
@@ -126,6 +126,7 @@ public class CursoDAO {
         } finally {
             connection.closeResultset(rs);
             connection.closeStatement(st);
+            conn = null;
         }
         return cursos;
     }

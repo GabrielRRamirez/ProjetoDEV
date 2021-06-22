@@ -12,10 +12,12 @@ import javax.swing.JOptionPane;
 
 public class AlunoDAO {
 
+    Connection conn = null;
+    PreparedStatement st = null;
+    ResultSet rs = null;
+    
     public Integer inserir(Aluno aluno) {
         Integer linhasAfetadas = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
         StringBuilder sql = null;
 
         try {
@@ -45,14 +47,13 @@ public class AlunoDAO {
             }
         } finally {
             connection.closeStatement(st);
+            conn = null;
         }
         return linhasAfetadas;
     }
 
     public void delete(int codigo) {
         int linhasAfetadas = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
         ResultSet rs = null;
 
         try {
@@ -85,14 +86,12 @@ public class AlunoDAO {
         } finally {
             connection.closeResultset(rs);
             connection.closeStatement(st);
+            conn = null;
         }
     }
 
     public List<Aluno> getAlunos(int codigo, String nome) {
         List<Aluno> alunos = new ArrayList<>();
-        Connection conn = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
         StringBuilder sql = null;
 
         try {
@@ -123,6 +122,7 @@ public class AlunoDAO {
         } finally {
             connection.closeResultset(rs);
             connection.closeStatement(st);
+            conn = null;
         }
         return alunos;
     }

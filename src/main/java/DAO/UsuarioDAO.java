@@ -12,13 +12,11 @@ import javax.swing.JOptionPane;
 
 public class UsuarioDAO {
 
+    Connection conn = null;
+    PreparedStatement st = null;
+    ResultSet rs = null;
+    
     public void insereUsuario(Usuario usuario) {
-        int linhasAfetadas = 0;
-        int idSalvo = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-
         try {
             conn = connection.getConnection();
             if(usuario.getCodigo()> 0){
@@ -28,7 +26,7 @@ public class UsuarioDAO {
                 st.setString(2, usuario.getLogin());
                 st.setString(3, usuario.getSenha());
                 st.setInt(4, usuario.getCodigo());
-                linhasAfetadas = st.executeUpdate();
+                st.executeUpdate();
             }else{
                 st = conn.prepareStatement("INSERT INTO usuario "
                     + "(nome, login, senha)"
@@ -37,14 +35,10 @@ public class UsuarioDAO {
                 st.setString(1, usuario.getNome());
                 st.setString(2, usuario.getLogin());
                 st.setString(3, usuario.getSenha());
-                linhasAfetadas = st.executeUpdate();
-            }
-                
-            if(linhasAfetadas > 0){
-               JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
+                st.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
                conn.commit();
             }
-
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
             try{
@@ -58,24 +52,20 @@ public class UsuarioDAO {
         } finally {
             connection.closeStatement(st);
             connection.closeResultset(rs);
-            
+            conn = null;
         }
     }
 
     public void deletaUsuario(int id) {
-        int linhasAfetadas = 0;
-        Connection conn = null;
-        PreparedStatement st = null;
 
         try {
             conn = connection.getConnection();
             st = conn.prepareStatement("DELETE FROM usuario WHERE id = ?");
             st.setInt(1, id);
-            linhasAfetadas = st.executeUpdate();
-            if(linhasAfetadas > 0){
-                JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
-                conn.commit();
-            }
+            st.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Excluido com sucesso!");
+            conn.commit();
+            
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
             try{
@@ -87,19 +77,15 @@ public class UsuarioDAO {
             }
         } finally {
             connection.closeStatement(st);
+            conn = null;
         }
     }
 
     public List<Usuario> get(int id, String nome) {
         List<Usuario> lista = new ArrayList<>();
-        Connection conn = null;
-        ResultSet rs = null;
-        PreparedStatement st = null;
-        StringBuilder sql = null;
+        StringBuilder sql = new StringBuilder();
 
-        sql = new StringBuilder();
         sql.append("SELECT * FROM usuario");
-
         if (id > 0 && !nome.equals("")) {
             sql.append(" WHERE nome like'%" + nome + "%' AND id =" + id);
         } else if (id > 0 && nome.equals("")) {
@@ -130,14 +116,12 @@ public class UsuarioDAO {
         } finally {
             connection.closeResultset(rs);
             connection.closeStatement(st);
+            conn = null;
         }
         return lista;
     }
 
     public int validaUsuario(String login, String senha) {
-        Connection conn = null;
-        ResultSet rs = null;
-        PreparedStatement st = null;
         int retorno = 0;
 
         try {
@@ -153,6 +137,7 @@ public class UsuarioDAO {
         } finally {
             connection.closeResultset(rs);
             connection.closeStatement(st);
+            conn = null;
         }
         return retorno;
     }
