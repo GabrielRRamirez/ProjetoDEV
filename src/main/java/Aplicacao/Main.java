@@ -7,7 +7,6 @@ import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 public class Main {
 
@@ -17,10 +16,12 @@ public class Main {
         //carrega tema
         try {
             System.out.println(System.getProperties());
-            UIManager.setLookAndFeel(new NimbusLookAndFeel());
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (UnsupportedLookAndFeelException ex) {
             JOptionPane.showConfirmDialog(null, "Erro", "Erro ao Carregar Tema",
                     JOptionPane.OK_OPTION, JOptionPane.ERROR_MESSAGE);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+            System.out.println(ex.getMessage());
         }
 
         //Valida se existe o properties
@@ -31,6 +32,9 @@ public class Main {
                 if (connection.validaBanco()) {
                     Login frmLogin = new Login();
                     frmLogin.setVisible(true);
+                }else{
+                    DadosBanco frmDadosBanco = new DadosBanco();
+                    frmDadosBanco.setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Erro Ao Carregar Arquivo Properties!");

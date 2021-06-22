@@ -7,23 +7,25 @@ package View;
 
 import Controller.AlunoController;
 import Model.Aluno;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+import Model.TableCellRender;
+import Model.TableModel;
 
 public class ConsultaAluno extends javax.swing.JInternalFrame {
     AlunoController controller = new AlunoController();
-    DefaultTableModel tabela = null;
+    TableModel tabela = null;
 
     public ConsultaAluno() {
         initComponents();
-        carregaTabela();
     }
     
     private void carregaTabela(){
-        tabela = (DefaultTableModel)tblAluno.getModel();
-        tabela.setNumRows(0);
         tabela.addColumn("Codigo");
         tabela.addColumn("Nome");
+        
+        tblAluno.setRowHeight(20);
+        
+        tblAluno.setDefaultRenderer(Object.class, new TableCellRender());
+        tblAluno.setDefaultRenderer(Integer.class, new TableCellRender());
     }
 
     @SuppressWarnings("unchecked")
@@ -208,8 +210,9 @@ public class ConsultaAluno extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        tabela = new TableModel();
+        carregaTabela();
         String nome = "";
-        tabela.setNumRows(0);
         int codigo = 0;
         
        if(!txtNome.getText().isEmpty()){
@@ -222,9 +225,11 @@ public class ConsultaAluno extends javax.swing.JInternalFrame {
       for(Aluno aluno : controller.getAlunos(codigo, nome)){
           tabela.addRow(new Object[]{
                   aluno.getCodigo(),
-                  aluno.getNome()
+                  aluno.getNome(),
                 });
+          
       } 
+      tblAluno.setModel(tabela);
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed

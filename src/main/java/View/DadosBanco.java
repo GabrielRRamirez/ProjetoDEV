@@ -170,8 +170,8 @@ public class DadosBanco extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
-        int input = JOptionPane.showConfirmDialog(null, "Properties não configurado!",
-                "Atenção!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+        int input = JOptionPane.showConfirmDialog(null, "Properties nao configurado!",
+                "Atencao!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
         if (input == 0) {
             this.dispose();
         }
@@ -218,8 +218,8 @@ public class DadosBanco extends javax.swing.JFrame {
         if (connection.criaArquivo(ip, usuario, senha, nomeBanco, porta)) {
             System.out.println("criou arquivo");
             if (connection.loadProperties()) {
-                this.dispose();                          //se conseguir fazer a leitura, fecha a tela e valida o banco
                 if (connection.validaBanco()) {         // se encontrar o banco chama login
+                    this.dispose();    
                     Login login = new Login();
                     login.setVisible(true);
                 }

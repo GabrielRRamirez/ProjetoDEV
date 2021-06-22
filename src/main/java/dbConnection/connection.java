@@ -91,42 +91,54 @@ public class connection {
         StringBuilder sql = null;
 
         url = "jdbc:postgresql://" + props.getProperty("database.ip") + ":" + props.getProperty("database.porta") + "/";
-        
+
         try {
             conn = DriverManager.getConnection(url, props);
             st = conn.prepareStatement("SELECT * FROM pg_database WHERE datname = '" + getDatabaseName() + "'");
             rs = st.executeQuery();
-            
+            System.out.println(getDatabaseName());
+            System.out.println("SELECT * FROM pg_database WHERE datname = '" + getDatabaseName() + "'");
+
             if (!rs.next()) {
                 int escolha = JOptionPane.showConfirmDialog(null, "O Banco: "
                         + connection.getDatabaseName() + " Nao existe, deseja Criar?",
                         "Atencao!!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                
+
                 if (escolha == 0) {// cria o banco
-                    
+
                     try {
                         sql = new StringBuilder();
                         sql.append("CREATE DATABASE " + props.getProperty("database.nome"));
                         st = conn.prepareStatement(sql.toString());
                         st.executeUpdate();                                     //cria o banco
                         retorno = true;
+
+                        url += props.getProperty("database.nome");
+                        conn.close();                                           //fecha conexao antiga
+                        conn = DriverManager.getConnection(url, props);
+
+                        TabelasDAO tabelas = new TabelasDAO();
+                        tabelas.criaTabelaAluno();
+                        tabelas.criaTabelaCurso();
+                        tabelas.criaTabelaCursoAluno();
+                        tabelas.criaTabelaUsuario();
+
+                        conn.setAutoCommit(false);
                     } catch (SQLException ex) {
                         JOptionPane.showMessageDialog(null, "Erro Ao Criar banco: /n" + ex);
                     }
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Nao foi poss�vel conectar com o banco!");
+                    
                 }
+            } else {
+                url += props.getProperty("database.nome");
+                conn.close();                                           //fecha conexão antiga
+                conn = DriverManager.getConnection(url, props);        //tenta conectar com a nova url
+                conn.setAutoCommit(false);
+                retorno = true;
             }
-            
-            url += props.getProperty("database.nome");
-            conn.close();                                           //fecha conexão antiga
-            conn = DriverManager.getConnection(url, props);        //tenta conectar com a nova url
-            conn.setAutoCommit(false);
-            TabelasDAO tabelas = new TabelasDAO();
-            tabelas.criaTabelaAluno();
-            tabelas.criaTabelaCurso();
-            tabelas.criaTabelaCursoAluno();
-            tabelas.criaTabelaUsuario();
-            retorno = true;
-            
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "A tentativa de Conexao falhou!!\n" + ex);

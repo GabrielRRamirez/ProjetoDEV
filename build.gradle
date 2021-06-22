@@ -6,9 +6,23 @@ apply plugin: 'application'
 mainClassName = 'Aplicacao.Main'
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
      implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.20'
+      testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+      testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+     
 }
+
+test{
+    useJUnitPlatform()
+}
+
+tasks.withType(Test) {
+        useJUnitPlatform()
+        jvmArgs '--enable-preview'
+    }

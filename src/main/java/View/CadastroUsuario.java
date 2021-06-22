@@ -193,7 +193,7 @@ public class CadastroUsuario extends javax.swing.JInternalFrame {
       if(txtConfirmaSenha.getPassword().length > 3 ){
           confirmaSenha = String.valueOf(txtConfirmaSenha.getPassword());
       }else{
-          JOptionPane.showMessageDialog(this, "Preencha a confirmação de senha Corretamente!");
+          JOptionPane.showMessageDialog(this, "Preencha a confirmacaoo de senha Corretamente!");
           txtSenha.requestFocus();
           return;
       }
@@ -201,11 +201,12 @@ public class CadastroUsuario extends javax.swing.JInternalFrame {
       if(senha.equals(confirmaSenha)){
           usuario.setSenha(confirmaSenha);
       }else{
-          JOptionPane.showMessageDialog(this, "As senhas não Coincidem!");
+          JOptionPane.showMessageDialog(this, "As senhas nao Coincidem!");
           txtConfirmaSenha.requestFocus();
           return;
       }
        controller.salvaUsuario(usuario);
+       
        this.dispose();
     }//GEN-LAST:event_btnSalvarActionPerformed
 

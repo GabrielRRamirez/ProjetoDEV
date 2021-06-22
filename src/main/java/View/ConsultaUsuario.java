@@ -1,11 +1,12 @@
 package View;
 
 import Controller.UsuarioController;
+import Model.CheckBoxCellRender;
+import Model.TableCellRender;
+import Model.TableModel;
 import Model.Usuario;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -14,21 +15,27 @@ import javax.swing.table.DefaultTableModel;
 public class ConsultaUsuario extends javax.swing.JInternalFrame {
 
     UsuarioController controller = new UsuarioController();
-    DefaultTableModel tabela = null;
+    TableModel tabela = null;
     /**
      * Creates new form ConsultaAluno
      */
     public ConsultaUsuario() {
         initComponents();
-        carregaTabela();
     }
     
     private void carregaTabela(){
-        tabela = (DefaultTableModel) tblAluno.getModel();
-        tabela.setNumRows(0);
         tabela.addColumn("Codigo");
         tabela.addColumn("Nome");
         tabela.addColumn("Login");
+        
+        
+
+        
+        tblAluno.setRowHeight(20);
+        
+        tblAluno.setDefaultRenderer(Integer.class, new TableCellRender());
+        tblAluno.setDefaultRenderer(Object.class, new TableCellRender());
+        
     }
     
     @SuppressWarnings("unchecked")
@@ -213,9 +220,10 @@ public class ConsultaUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        tabela = new TableModel();
+        carregaTabela();
         String nome = "";
         int codigo = 0;
-        tabela.setNumRows(0);
         List<Usuario> lista = new ArrayList<>();
 
         if (!txtNome.getText().isEmpty()) {
@@ -226,12 +234,13 @@ public class ConsultaUsuario extends javax.swing.JInternalFrame {
         }
 
         for (Usuario usuario : controller.get(codigo, nome)) {
-            tabela.addRow(new Object[]{
+           tabela.addRow(new Object[]{
                 usuario.getCodigo(),
                 usuario.getNome(),
-                usuario.getLogin()
+                usuario.getLogin(),
             });
         }
+        tblAluno.setModel(tabela);
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
@@ -276,7 +285,7 @@ public class ConsultaUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblAluno;
+    protected javax.swing.JTable tblAluno;
     private javax.swing.JFormattedTextField txtCodigo;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables

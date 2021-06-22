@@ -6,31 +6,33 @@
 package View;
 
 import Controller.CursoController;
+import Model.CheckBoxCellRender;
 import Model.Curso;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+import Model.TableCellRender;
+import Model.TableModel;
 
 /**
  *
  * @author Samsung
  */
 public class ConsultaCurso extends javax.swing.JInternalFrame {
-    CursoController controller = new CursoController();
-    DefaultTableModel tabela = null;
+    CursoController controller = null;
+    TableModel tabela = null;
     
     public ConsultaCurso() {
+        controller = new CursoController();
         initComponents();
-        carregaTabela();
     }
     
     private void carregaTabela(){
-        tabela = (DefaultTableModel)tblCurso.getModel();
-        tabela.setNumRows(0);
         tabela.addColumn("Codigo");
         tabela.addColumn("Descricao");
         tabela.addColumn("Ementa");
+        tblCurso.setRowHeight(20);
+        
+        tblCurso.setDefaultRenderer(Integer.class, new TableCellRender());
+        tblCurso.setDefaultRenderer(Object.class, new TableCellRender());
+        tblCurso.setDefaultRenderer(Boolean.class, new CheckBoxCellRender());
     }
 
     @SuppressWarnings("unchecked")
@@ -215,9 +217,10 @@ public class ConsultaCurso extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        tabela = new TableModel();
+        carregaTabela();
         String nome = "";
         int codigo = 0;
-        tabela.setNumRows(0);
         
        if(!txtDescricao.getText().isEmpty()){
            nome = txtDescricao.getText();
@@ -233,6 +236,7 @@ public class ConsultaCurso extends javax.swing.JInternalFrame {
                   curso.getEmenta()
                 });
       } 
+      tblCurso.setModel(tabela);
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed

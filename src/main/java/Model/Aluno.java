@@ -12,6 +12,10 @@ public class Aluno {
         this.nome = nome;
     }
 
+    public Aluno(String nome) {
+        this.nome = null;
+    }
+
     public int getCodigo() {
         return codigo;
     }

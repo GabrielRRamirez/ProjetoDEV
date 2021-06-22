@@ -12,8 +12,8 @@ import javax.swing.JOptionPane;
 
 public class AlunoDAO {
 
-    public void inserir(Aluno aluno) {
-        int linhasAfetadas = 0;
+    public Integer inserir(Aluno aluno) {
+        Integer linhasAfetadas = 0;
         Connection conn = null;
         PreparedStatement st = null;
         StringBuilder sql = null;
@@ -26,25 +26,27 @@ public class AlunoDAO {
             } else {
                 sql.append("INSERT INTO aluno(nome) VALUES ('" + aluno.getNome() + "')");
             }
+
             conn = connection.getConnection();
             st = conn.prepareStatement(sql.toString());
             linhasAfetadas = st.executeUpdate();
+
             if (linhasAfetadas > 0) {
-                JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
                 conn.commit();
             }
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-            try{
-                if(conn != null){
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+            try {
+                if (conn != null) {
                     conn.rollback();
                 }
-            }catch(SQLException e){
-                JOptionPane.showMessageDialog(null, "Erro: \n" + e);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Erro: \n" + e.getMessage());
             }
         } finally {
             connection.closeStatement(st);
         }
+        return linhasAfetadas;
     }
 
     public void delete(int codigo) {
@@ -61,7 +63,7 @@ public class AlunoDAO {
                 rs = st.executeQuery();
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(null, "O Aluno esta vinculado "
-                            + "√† uma classe e n√£o pode ser excluido!");
+                            + "a† uma classe e n√o pode ser excluido!");
                 } else {
                     st = conn.prepareStatement("DELETE FROM aluno WHERE codigo = " + codigo);
                     linhasAfetadas = st.executeUpdate();
@@ -72,11 +74,12 @@ public class AlunoDAO {
                 }
             }
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);try{
-                if(conn != null){
+            JOptionPane.showMessageDialog(null, ex);
+            try {
+                if (conn != null) {
                     conn.rollback();
                 }
-            }catch(SQLException e){
+            } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "Erro: \n" + e);
             }
         } finally {
@@ -116,7 +119,7 @@ public class AlunoDAO {
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
-            
+
         } finally {
             connection.closeResultset(rs);
             connection.closeStatement(st);

@@ -24,7 +24,6 @@ public class TabelasDAO {
             conn = connection.getConnection();
             st = conn.prepareStatement(sql.toString());
             st.executeUpdate();
-            conn.commit();
             retorno = 1;
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao criar tabela: /n" + ex);
@@ -57,20 +56,11 @@ public class TabelasDAO {
             conn = connection.getConnection();
             st = conn.prepareStatement(sql.toString());
             st.executeUpdate();
-            conn.commit();
 
             st = conn.prepareStatement("SELECT id FROM public.usuario WHERE ID = 0");
             rs = st.executeQuery();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null,"Erro ao criar tabela: /n" + ex);
-            try{
-                if(conn != null){
-                    conn.rollback();
-                }
-            }catch(SQLException e){
-                JOptionPane.showMessageDialog(null, "Erro: \n" + e);
-            }
-
         }
         
         try {
@@ -81,20 +71,10 @@ public class TabelasDAO {
                 sql.append("0,'administrador','admin','admin');");
                 st = conn.prepareStatement(sql.toString());
                 st.executeUpdate();
-                conn.commit();
                 retorno = 1;
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao criar tabela: /n" + ex);
-            try{
-                if(conn != null){
-                    conn.rollback();
-                }
-            }catch(SQLException e){
-                JOptionPane.showMessageDialog(null, "Erro: \n" + e);
-            }
-
-           
         }
         return retorno;
     }
@@ -114,17 +94,9 @@ public class TabelasDAO {
             conn = connection.getConnection();
             st = conn.prepareStatement(sql.toString());
             st.executeUpdate();
-            conn.commit();
             retorno =  1;
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao criar tabela: /n" + ex);
-            try{
-                if(conn != null){
-                    conn.rollback();
-                }
-            }catch(SQLException e){
-                JOptionPane.showMessageDialog(null, "Erro: \n" + e);
-            }
         }
         return retorno;
     }
@@ -156,19 +128,10 @@ public class TabelasDAO {
             sql.append("ADD FOREIGN KEY(codigo_aluno) REFERENCES public.aluno(codigo);");
             st = conn.prepareStatement(sql.toString());
             st.executeUpdate();
-            conn.commit();
             retorno = 1;
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao criar tabela: /n" + ex);
-            try{
-                if(conn != null){
-                    conn.rollback();
-                }
-            }catch(SQLException e){
-                JOptionPane.showMessageDialog(null, "Erro: \n" + e);
-            }
-
         }
         return retorno;
     }

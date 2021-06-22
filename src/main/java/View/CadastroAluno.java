@@ -157,8 +157,10 @@ public class CadastroAluno extends javax.swing.JInternalFrame {
             txtNome.requestFocus();
             return;
         }
-        
-        controller.inserir(aluno);
+        Integer retorno = controller.inserir(aluno);
+        if(retorno > 0){
+            txtCodigo.setText(String.valueOf(retorno));
+        }
         this.dispose();
     }//GEN-LAST:event_btnSalvarActionPerformed
 

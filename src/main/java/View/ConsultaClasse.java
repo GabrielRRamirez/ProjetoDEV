@@ -1,26 +1,31 @@
 package View;
 
-import Controller.AlunoController;
 import Controller.CursoAlunoController;
+import Model.CheckBoxCellRender;
 import Model.CursoAluno;
+import Model.TableCellRender;
+import Model.TableModel;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 public class ConsultaClasse extends javax.swing.JInternalFrame {
-    CursoAlunoController controller = new CursoAlunoController();
-    DefaultTableModel tabela = null;
+    CursoAlunoController controller = null;
+    TableModel tabela = null;
 
     public ConsultaClasse() {
         initComponents();
-        carregaTabela();
+        controller =  new CursoAlunoController();
     }
     
     private void carregaTabela(){
-        tabela = (DefaultTableModel)tblCursoAluno.getModel();
-        tabela.setNumRows(0);
         tabela.addColumn("Classe");
         tabela.addColumn("Aluno");
         tabela.addColumn("Curso");
+        
+        tblCursoAluno.setRowHeight(20);
+        
+        tblCursoAluno.setDefaultRenderer(Integer.class, new TableCellRender());
+        tblCursoAluno.setDefaultRenderer(Object.class, new TableCellRender());
+        tblCursoAluno.setDefaultRenderer(Boolean.class, new CheckBoxCellRender());
     }
 
     @SuppressWarnings("unchecked")
@@ -215,8 +220,9 @@ public class ConsultaClasse extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        tabela = new TableModel();
+        carregaTabela();
         String pesquisa = "";
-        tabela.setNumRows(0);
         int codigo = 0;
         int tipoConsulta = 0;
         
@@ -239,6 +245,7 @@ public class ConsultaClasse extends javax.swing.JInternalFrame {
                c.getDescricaoCurso()
            });
        }
+       tblCursoAluno.setModel(tabela);
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed

@@ -12,8 +12,8 @@ public class AlunoController {
     private AlunoDAO DAO = new AlunoDAO();
     private Aluno aluno = new Aluno();
     
-    public void inserir(Aluno aluno){
-        DAO.inserir(aluno);
+    public Integer inserir(Aluno aluno){
+        return DAO.inserir(aluno);
     }
     
     public void delete(int codigo){
